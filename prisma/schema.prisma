@@ -1,0 +1,239 @@
+// prisma/schema.prisma
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model semester {
+  id         Int      @id @default(autoincrement())
+  nama       String
+  is_active  Boolean  @default(false)
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  enrollments enrollment[]
+  tugas       tugas[]
+}
+
+model admin {
+  id         Int      @id @default(autoincrement())
+  username   String   @unique
+  password   String   // bcrypt hash
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+}
+
+model dosen {
+  id           Int      @id @default(autoincrement())
+  nidn         String   @unique
+  nama         String
+  password     String   // bcrypt hash
+  prodi_id     Int
+  status_aktif Boolean  @default(true)
+  created_at   DateTime @default(now())
+  updated_at   DateTime @updatedAt
+
+  prodi        prodi    @relation(fields: [prodi_id], references: [id])
+  dosen_pengampu dosen_pengampu[]
+  pengumuman     pengumuman[]
+}
+
+model mahasiswa {
+  id             Int      @id @default(autoincrement())
+  nim            String   @unique
+  nama           String
+  password       String   // bcrypt hash
+  prodi_id       Int
+  semester_aktif Int
+  angkatan       Int
+  status_aktif   Boolean  @default(true)
+  status_kelulusan String?
+  tanggal_lulus    DateTime?
+  created_at     DateTime @default(now())
+  updated_at     DateTime @updatedAt
+
+  prodi        prodi    @relation(fields: [prodi_id], references: [id])
+  enrollments  enrollment[]
+  submissions  submission[]
+}
+
+model mata_kuliah {
+  id            Int      @id @default(autoincrement())
+  kode          String   @unique
+  nama          String
+  semester      Int
+  sks           Int
+  prodi_id      Int
+  status_aktif  Boolean  @default(true)
+  created_at    DateTime @default(now())
+  updated_at    DateTime @updatedAt
+
+  prodi          prodi        @relation(fields: [prodi_id], references: [id])
+  dosen_pengampu dosen_pengampu[]
+  enrollments    enrollment[]
+  tugas          tugas[]
+}
+
+model dosen_pengampu {
+  id             Int      @id @default(autoincrement())
+  dosen_id       Int
+  mata_kuliah_id Int
+  created_at     DateTime @default(now())
+
+  dosen       dosen       @relation(fields: [dosen_id], references: [id], onDelete: Cascade)
+  mata_kuliah mata_kuliah @relation(fields: [mata_kuliah_id], references: [id], onDelete: Cascade)
+
+  @@unique([dosen_id, mata_kuliah_id])
+}
+
+model enrollment {
+  id             Int      @id @default(autoincrement())
+  mahasiswa_id   Int
+  mata_kuliah_id Int
+  semester_id    Int
+  created_at     DateTime @default(now())
+
+  mahasiswa   mahasiswa   @relation(fields: [mahasiswa_id], references: [id], onDelete: Cascade)
+  mata_kuliah mata_kuliah @relation(fields: [mata_kuliah_id], references: [id], onDelete: Cascade)
+  semester    semester    @relation(fields: [semester_id], references: [id])
+
+  @@unique([mahasiswa_id, mata_kuliah_id, semester_id])
+}
+
+model tugas {
+  id             Int      @id @default(autoincrement())
+  judul          String
+  deskripsi      String?
+  deadline       DateTime
+  lampiran_url   String?
+  status         String    @default("draft") // draft / publish
+  mata_kuliah_id Int
+  semester_id    Int
+  created_at     DateTime @default(now())
+  updated_at     DateTime @updatedAt
+
+  mata_kuliah mata_kuliah @relation(fields: [mata_kuliah_id], references: [id], onDelete: Cascade)
+  semester    semester    @relation(fields: [semester_id], references: [id], onDelete: Cascade)
+  submissions  submission[]
+}
+
+model submission {
+  id           Int      @id @default(autoincrement())
+  tugas_id     Int
+  mahasiswa_id Int
+  file_url     String
+  catatan      String?
+  waktu_submit DateTime @default(now())
+  is_late      Boolean  @default(false)
+
+  tugas     tugas     @relation(fields: [tugas_id], references: [id], onDelete: Cascade)
+  mahasiswa mahasiswa @relation(fields: [mahasiswa_id], references: [id], onDelete: Cascade)
+
+  nilai nilai?
+}
+
+model nilai {
+  id            Int      @id @default(autoincrement())
+  submission_id Int      @unique
+  nilai_angka   Float?
+  feedback      String?
+  status_revisi String   @default("tidak") // tidak / revisi
+  created_at    DateTime @default(now())
+  updated_at    DateTime @updatedAt
+
+  submission submission @relation(fields: [submission_id], references: [id], onDelete: Cascade)
+}
+
+model pengumuman {
+  id         Int      @id @default(autoincrement())
+  judul      String
+  isi        String
+  target     String   // semua / dosen / mahasiswa
+  created_by String   // "admin" atau nidn dosen
+  dosen_id   Int?
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  dosen dosen? @relation(fields: [dosen_id], references: [id], onDelete: SetNull)
+}
+
+model notifikasi {
+  id         Int      @id @default(autoincrement())
+  user_id    String   // nim / nidn / username
+  user_role  String   // mahasiswa / dosen / admin
+  judul      String
+  pesan      String
+  is_read    Boolean  @default(false)
+  created_at DateTime @default(now())
+}
+
+model telegram_link {
+  id          Int      @id @default(autoincrement())
+  user_id     String   // nim / nidn
+  user_role   String
+  chat_id     String   @unique
+  token       String   @unique
+  is_verified Boolean  @default(false)
+  created_at  DateTime @default(now())
+}
+
+model audit_log {
+  id         Int      @id @default(autoincrement())
+  user_id    String
+  user_role  String
+  action     String
+  detail     String?
+  ip_address String?
+  created_at DateTime @default(now())
+}
+
+model account {
+  id                 String  @id @default(cuid())
+  userId             String
+  type               String
+  provider           String
+  providerAccountId  String
+  refresh_token      String?
+  access_token       String?
+  expires_at         Int?
+  token_type         String?
+  scope              String?
+  id_token           String?
+  session_state      String?
+
+  @@unique([provider, providerAccountId])
+}
+
+model session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+}
+
+model fakultas {
+  id         Int      @id @default(autoincrement())
+  nama       String   @unique
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  prodis     prodi[]
+}
+
+model prodi {
+  id          Int          @id @default(autoincrement())
+  nama        String       @unique
+  fakultas_id Int
+  created_at  DateTime     @default(now())
+  updated_at  DateTime     @updatedAt
+
+  fakultas    fakultas     @relation(fields: [fakultas_id], references: [id], onDelete: Cascade)
+  mahasiswa   mahasiswa[]
+  dosen       dosen[]
+  mata_kuliah mata_kuliah[]
+}
