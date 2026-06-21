@@ -34,6 +34,7 @@ export const authOptions: AuthOptions = {
             email: null,
             role: "admin" as const,
             identifier: admin.username,
+            username: admin.username,
           }
         }
 
@@ -54,6 +55,7 @@ export const authOptions: AuthOptions = {
             email: null,
             role: "dosen" as const,
             identifier: dosen.nidn,
+            username: dosen.nidn,
             prodi: dosen.prodi?.nama,
           }
         }
@@ -75,6 +77,7 @@ export const authOptions: AuthOptions = {
             email: null,
             role: "mahasiswa" as const,
             identifier: mahasiswa.nim,
+            username: mahasiswa.nim,
             prodi: mahasiswa.prodi?.nama,
           }
         }
@@ -89,6 +92,7 @@ export const authOptions: AuthOptions = {
         token.id = user.id
         token.role = user.role
         token.identifier = user.identifier
+        token.username = user.username
         token.prodi = user.prodi
       }
       return token
@@ -98,6 +102,7 @@ export const authOptions: AuthOptions = {
         session.user.id = token.id
         session.user.role = token.role
         session.user.identifier = token.identifier
+        session.user.username = token.username
         session.user.prodi = token.prodi
       }
       return session

@@ -7,6 +7,7 @@ declare module "next-auth" {
       id: string
       role: "admin" | "dosen" | "mahasiswa"
       identifier: string
+      username: string
       prodi?: string
     } & DefaultSession["user"]
   }
@@ -15,6 +16,7 @@ declare module "next-auth" {
     id: string
     role: "admin" | "dosen" | "mahasiswa"
     identifier: string
+    username: string
     prodi?: string
   }
 }
@@ -24,6 +26,7 @@ declare module "next-auth/jwt" {
     id: string
     role: "admin" | "dosen" | "mahasiswa"
     identifier: string
+    username: string
     prodi?: string
   }
 }

@@ -3,6 +3,8 @@ import { authOptions } from "@/lib/auth"
 
 export const dynamic = "force-dynamic"
 
+// NextAuth handler configured with authOptions from @/lib/auth
+// containing session callback mappings for session.user.id, role, and username.
 const handler = NextAuth(authOptions)
 
 export async function GET(req: Request, { params }: { params: Promise<{ nextauth: string[] }> }) {

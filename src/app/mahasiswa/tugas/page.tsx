@@ -28,7 +28,7 @@ import {
   Trash2,
   AlertCircle
 } from "lucide-react"
-import { supabase } from "@/lib/supabase"
+import { uploadFile } from "@/lib/upload"
 import { SemesterFilter } from "@/components/ui/semester-filter"
 
 // Form validation schema for submitting task
@@ -124,46 +124,20 @@ function StudentTasksContent() {
       return
     }
 
+    // Format validation: PDF, DOCX, PPT, ZIP, JPG, PNG
+    const fileExt = file.name.split(".").pop()?.toLowerCase() || ""
+    const allowedExtensions = ["pdf", "docx", "ppt", "pptx", "zip", "jpg", "jpeg", "png"]
+    if (!allowedExtensions.includes(fileExt)) {
+      toast.error("Format berkas harus PDF, DOCX, PPT, ZIP, JPG, atau PNG!")
+      return
+    }
+
     setUploading(true)
     try {
-      const fileExt = file.name.split(".").pop()
-      // Folder structure per task: submissions/task_${tugasId}/${nim}_${Date.now()}.${fileExt}
-      const fileName = `${studentNim || "nim"}_${Date.now()}.${fileExt}`
-      const filePath = `submissions/task_${activeTask.id}/${fileName}`
+      // Call server-side uploadFile helper
+      const res = await uploadFile(file, studentNim, activeTask.id)
 
-      // Upload file to Supabase Storage Bucket 'submissions'
-      const { error } = await supabase.storage
-        .from("submissions")
-        .upload(filePath, file, {
-          cacheControl: "3600",
-          upsert: false,
-        })
-
-      if (error) {
-        // If bucket does not exist, let's create it dynamically
-        if (error.message.includes("Bucket not found") || error.message.includes("does not exist")) {
-          const { error: createError } = await supabase.storage.createBucket("submissions", { public: true })
-          if (createError) throw createError
-
-          // Retry
-          const { error: retryError } = await supabase.storage
-            .from("submissions")
-            .upload(filePath, file, {
-              cacheControl: "3600",
-              upsert: false,
-            })
-          if (retryError) throw retryError
-        } else {
-          throw error
-        }
-      }
-
-      // Get public URL
-      const { data: { publicUrl } } = supabase.storage
-        .from("submissions")
-        .getPublicUrl(filePath)
-
-      setValue("fileUrl", publicUrl)
+      setValue("fileUrl", res.url)
       toast.success("Lembar jawaban berhasil diunggah!")
     } catch (err: any) {
       console.error("Gagal mengunggah file:", err)
