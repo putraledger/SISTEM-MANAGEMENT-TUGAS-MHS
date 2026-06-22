@@ -21,6 +21,16 @@ import {
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+  DialogClose,
+} from "@/components/ui/dialog"
 import { getAppSettings } from "@/app/admin/actions"
 
 export function SidebarDosen() {
@@ -50,7 +60,7 @@ export function SidebarDosen() {
   ]
 
   return (
-    <div className="flex flex-col justify-between h-full p-5 min-h-screen md:min-h-0 bg-white dark:bg-slate-950/80">
+    <div className="flex flex-col justify-between h-full p-5 min-h-full md:min-h-0 bg-white dark:bg-slate-950/80">
       <div className="space-y-6">
         {/* Logo & Branding */}
         <div className="flex items-center gap-2.5">
@@ -148,14 +158,41 @@ export function SidebarDosen() {
           </DropdownMenu>
         </div>
 
-        <Button
-          onClick={() => signOut({ callbackUrl: "/login" })}
-          variant="ghost"
-          className="w-full justify-start text-xs text-rose-600 hover:bg-rose-50 hover:text-rose-700 active:scale-95 transition-all p-2.5 rounded-lg border border-transparent"
-        >
-          <LogOut className="size-4 mr-2" />
-          Keluar Sesi
-        </Button>
+        <Dialog>
+          <DialogTrigger render={
+            <Button
+              variant="ghost"
+              className="w-full justify-start text-xs text-rose-600 hover:bg-rose-50 hover:text-rose-700 active:scale-95 transition-all p-2.5 rounded-lg border border-transparent cursor-pointer"
+            >
+              <LogOut className="size-4 mr-2" />
+              Keluar Sesi
+            </Button>
+          } />
+          <DialogContent className="max-w-[340px] sm:max-w-[340px] border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900 rounded-xl shadow-lg">
+            <DialogHeader className="pt-2">
+              <DialogTitle className="text-sm font-bold text-slate-800 dark:text-white flex items-center gap-2">
+                <LogOut className="size-4.5 text-rose-600" />
+                Konfirmasi Keluar Sesi
+              </DialogTitle>
+              <DialogDescription className="text-xs text-slate-500 dark:text-slate-400 mt-2 leading-relaxed">
+                Apakah Anda yakin ingin keluar dari sesi ini?
+              </DialogDescription>
+            </DialogHeader>
+            <DialogFooter className="flex flex-row justify-end gap-2 border-t pt-3 mt-4 border-slate-150 dark:border-slate-800">
+              <DialogClose render={
+                <Button variant="outline" className="text-[10px] font-semibold px-4 py-2 border-slate-200 hover:bg-slate-55 dark:border-slate-800 dark:hover:bg-slate-800 cursor-pointer" />
+              }>
+                Batal
+              </DialogClose>
+              <Button
+                onClick={() => signOut({ callbackUrl: "/login" })}
+                className="text-[10px] font-semibold bg-rose-600 hover:bg-rose-500 text-white px-4 py-2 rounded-lg cursor-pointer transition-all active:scale-95"
+              >
+                Keluar
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
       </div>
     </div>
   )

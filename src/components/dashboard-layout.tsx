@@ -71,7 +71,7 @@ export function DashboardLayout({ children, sidebar }: DashboardLayoutProps) {
 
   return (
     <DashboardLayoutContext.Provider value={true}>
-      <div className="flex h-screen w-screen overflow-hidden bg-slate-50/50 text-slate-700 font-sans dark:bg-slate-950 dark:text-slate-200">
+      <div className="flex h-dvh w-screen overflow-hidden bg-slate-50/50 text-slate-700 font-sans dark:bg-slate-950 dark:text-slate-200">
         {/* Desktop Sidebar (Fixed 260px wide, independent scrolling) */}
         <aside className="hidden md:block w-[260px] shrink-0 border-r border-slate-100 bg-white dark:border-slate-900 dark:bg-slate-950/80 dark:backdrop-blur-md h-full overflow-y-auto">
           {sidebar}
@@ -90,7 +90,7 @@ export function DashboardLayout({ children, sidebar }: DashboardLayoutProps) {
                       <Menu className="size-4" />
                     </Button>
                   } />
-                  <SheetContent side="left" className="w-[260px] p-0 bg-white dark:bg-slate-950 border-r border-slate-100 dark:border-slate-900 h-full overflow-y-auto">
+                  <SheetContent side="left" className="w-[260px] p-0 bg-white dark:bg-slate-950 border-r border-slate-100 dark:border-slate-900 h-dvh overflow-y-auto">
                     {sidebar}
                   </SheetContent>
                 </Sheet>
@@ -139,7 +139,7 @@ export function DashboardLayout({ children, sidebar }: DashboardLayoutProps) {
           </header>
 
           {/* Main Scroll Content */}
-          <main className="flex-1 p-6 md:p-8 overflow-y-auto">
+          <main className="flex-1 p-6 pb-12 md:p-8 overflow-y-auto">
             {children}
           </main>
         </div>
