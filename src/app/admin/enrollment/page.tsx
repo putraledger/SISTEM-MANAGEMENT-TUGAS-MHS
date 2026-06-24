@@ -239,7 +239,7 @@ export default function EnrollmentManagement() {
               Daftarkan Mahasiswa ke Kelas Mata Kuliah di Semester Terpilih
             </p>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex flex-wrap items-center gap-2">
             <Button
               onClick={() => setIsImportOpen(true)}
               variant="outline"
@@ -268,7 +268,7 @@ export default function EnrollmentManagement() {
             <select
               value={selectedSemesterId}
               onChange={(e) => setSelectedSemesterId(e.target.value)}
-              className="w-full text-xs px-3.5 py-2 border border-slate-200 rounded-lg outline-none bg-slate-50/50 focus:border-blue-500 dark:bg-slate-900/50 dark:border-slate-800 cursor-pointer"
+              className="w-full text-xs pl-3.5 pr-10 py-2 border border-slate-200 rounded-lg outline-none bg-slate-50/50 focus:border-blue-500 dark:bg-slate-900/50 dark:border-slate-800 cursor-pointer"
             >
               {semesters.map((sem) => (
                 <option key={sem.id} value={sem.id}>
@@ -286,7 +286,7 @@ export default function EnrollmentManagement() {
             <select
               value={selectedCourseId}
               onChange={(e) => setSelectedCourseId(e.target.value)}
-              className="w-full text-xs px-3.5 py-2 border border-slate-200 rounded-lg outline-none bg-slate-50/50 focus:border-blue-500 dark:bg-slate-900/50 dark:border-slate-800 cursor-pointer"
+              className="w-full text-xs pl-3.5 pr-10 py-2 border border-slate-200 rounded-lg outline-none bg-slate-50/50 focus:border-blue-500 dark:bg-slate-900/50 dark:border-slate-800 cursor-pointer"
             >
               {courses.map((mk) => (
                 <option key={mk.id} value={mk.id}>

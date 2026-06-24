@@ -358,12 +358,12 @@ export default function ManajemenTugas() {
             onChange={setSelectedSemesterId}
           />
 
-          <div className="flex items-center gap-2 w-full md:w-auto ml-auto">
-            <span className="text-xs text-slate-400 font-semibold whitespace-nowrap">Filter Mata Kuliah:</span>
+          <div className="flex flex-wrap items-center gap-2 w-full md:w-auto md:ml-auto">
+            <span className="text-xs text-slate-400 font-semibold whitespace-nowrap hidden sm:inline">Filter Mata Kuliah:</span>
             <select
               value={courseFilter}
               onChange={(e) => setCourseFilter(e.target.value)}
-              className="text-xs py-1.5 pl-3.5 pr-8 border border-slate-200 rounded-lg outline-none bg-white dark:bg-slate-900 dark:border-slate-800 cursor-pointer"
+              className="w-full sm:w-auto text-xs py-1.5 pl-3.5 pr-10 border border-slate-200 rounded-lg outline-none bg-white dark:bg-slate-900 dark:border-slate-800 cursor-pointer"
             >
               <option value="all">Semua Mata Kuliah</option>
               {classes.map((cls) => (
@@ -419,7 +419,7 @@ export default function ManajemenTugas() {
                   </label>
                   <select
                     {...register("mata_kuliah_id", { valueAsNumber: true })}
-                    className="w-full text-xs px-3.5 py-2 border border-slate-200 rounded-lg outline-none bg-slate-50/50 focus:border-blue-500 dark:bg-slate-900/50 dark:border-slate-800 cursor-pointer"
+                    className="w-full text-xs pl-3.5 pr-10 py-2 border border-slate-200 rounded-lg outline-none bg-slate-50/50 focus:border-blue-500 dark:bg-slate-900/50 dark:border-slate-800 cursor-pointer"
                   >
                     {classes.map((cls) => (
                       <option key={cls.mata_kuliah.id} value={cls.mata_kuliah.id}>
@@ -485,7 +485,7 @@ export default function ManajemenTugas() {
                     </label>
                     <select
                       {...register("status")}
-                      className="w-full text-xs px-3.5 py-2 border border-slate-200 rounded-lg outline-none bg-slate-50/50 focus:border-blue-500 dark:bg-slate-900/50 dark:border-slate-800 cursor-pointer"
+                      className="w-full text-xs pl-3.5 pr-10 py-2 border border-slate-200 rounded-lg outline-none bg-slate-50/50 focus:border-blue-500 dark:bg-slate-900/50 dark:border-slate-800 cursor-pointer"
                     >
                       <option value="draft">Draft (Simpan sebagai draf)</option>
                       <option value="publish">Publish (Terbitkan & Beritahu Telegram)</option>

@@ -184,7 +184,7 @@ export default function PengaturanSistem() {
                       <input
                         type="text"
                         {...register("logoUrl")}
-                        className="flex-1 text-xs px-3.5 py-2.5 border border-slate-200 rounded-lg outline-none bg-slate-50/50 focus:border-blue-500 dark:bg-slate-900/50 dark:border-slate-800"
+                        className="flex-1 min-w-0 text-xs px-3.5 py-2.5 border border-slate-200 rounded-lg outline-none bg-slate-50/50 focus:border-blue-500 dark:bg-slate-900/50 dark:border-slate-800"
                         placeholder="Contoh: https://example.com/logo.png"
                       />
                       <label className="inline-flex items-center gap-1.5 px-4 py-2.5 border border-slate-200 text-xs font-semibold rounded-lg bg-white hover:bg-slate-50 text-slate-700 transition-colors shadow-sm hover:border-slate-300 shrink-0 cursor-pointer dark:bg-slate-950 dark:border-slate-800 dark:text-slate-300 dark:hover:bg-slate-900">

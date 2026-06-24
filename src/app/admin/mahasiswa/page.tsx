@@ -317,8 +317,8 @@ export default function ManajemenMahasiswa() {
             />
           </div>
 
-          <div className="flex items-center gap-2 w-full md:w-auto ml-auto">
-            <span className="text-xs text-slate-400 font-semibold whitespace-nowrap">Program Studi:</span>
+          <div className="flex flex-wrap items-center gap-2 w-full md:w-auto md:ml-auto">
+            <span className="text-xs text-slate-400 font-semibold whitespace-nowrap hidden sm:inline">Program Studi:</span>
             <select
               value={prodiFilter}
               onChange={(e) => setProdiFilter(e.target.value)}
@@ -330,7 +330,7 @@ export default function ManajemenMahasiswa() {
               ))}
             </select>
 
-            <span className="text-xs text-slate-400 font-semibold whitespace-nowrap ml-2">Semester Aktif:</span>
+            <span className="text-xs text-slate-400 font-semibold whitespace-nowrap hidden sm:inline sm:ml-2">Semester Aktif:</span>
             <select
               value={semesterFilter}
               onChange={(e) => setSemesterFilter(e.target.value)}

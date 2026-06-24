@@ -313,7 +313,7 @@ export default function DosenPengumuman() {
                   </label>
                   <select
                     {...register("target")}
-                    className="w-full text-xs px-3.5 py-2 border border-slate-200 rounded-lg outline-none bg-slate-50/50 focus:border-blue-500 dark:bg-slate-900/50 dark:border-slate-800 cursor-pointer"
+                    className="w-full text-xs pl-3.5 pr-10 py-2 border border-slate-200 rounded-lg outline-none bg-slate-50/50 focus:border-blue-500 dark:bg-slate-900/50 dark:border-slate-800 cursor-pointer"
                   >
                     <option value="mahasiswa">Seluruh Mahasiswa Terdaftar (Kelas Saya)</option>
                     <option value="semua">Semua Pengguna Universitas (Umum)</option>
