@@ -31,6 +31,7 @@ export default function DosenNotificationsPage() {
     try {
       await markAllDosenNotificationsAsRead()
       toast.success("Semua notifikasi ditandai telah dibaca.")
+      window.dispatchEvent(new Event("notifications-updated"))
       loadNotifications()
     } catch (err) {
       console.error("Gagal menandai semua dibaca:", err)

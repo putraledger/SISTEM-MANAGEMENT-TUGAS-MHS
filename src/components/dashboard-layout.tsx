@@ -29,6 +29,7 @@ export function DashboardLayout({ children, sidebar }: DashboardLayoutProps) {
   const { data: session } = useSession()
   const [notifications, setNotifications] = useState(0)
   const [appName, setAppName] = useState("SIMATU")
+  const pathname = usePathname()
   
   const user = session?.user
 
@@ -39,17 +40,28 @@ export function DashboardLayout({ children, sidebar }: DashboardLayoutProps) {
       }
     })
 
-    if (user?.identifier && user?.role) {
-      fetch("/api/notifications/unread-count")
-        .then((res) => res.json())
-        .then((data) => {
-          if (data && typeof data.count === "number") {
-            setNotifications(data.count)
-          }
-        })
-        .catch((err) => console.error("Error fetching unread notifications count:", err))
+    const fetchCount = () => {
+      if (user?.identifier && user?.role) {
+        fetch("/api/notifications/unread-count")
+          .then((res) => res.json())
+          .then((data) => {
+            if (data && typeof data.count === "number") {
+              setNotifications(data.count)
+            }
+          })
+          .catch((err) => console.error("Error fetching unread notifications count:", err))
+      }
     }
-  }, [user])
+
+    fetchCount()
+
+    // Listen to custom event when notifications are marked as read
+    window.addEventListener("notifications-updated", fetchCount)
+
+    return () => {
+      window.removeEventListener("notifications-updated", fetchCount)
+    }
+  }, [user, pathname])
 
   // If this DashboardLayout is rendered inside another DashboardLayout, just return children
   if (isNested) {
@@ -110,7 +122,7 @@ export function DashboardLayout({ children, sidebar }: DashboardLayoutProps) {
                     ? "/mahasiswa/notifikasi"
                     : user?.role === "dosen"
                     ? "/dosen/notifikasi"
-                    : "/admin/pengumuman"
+                    : "/admin/notifikasi"
                 }
                 className="relative p-1.5 rounded-full text-slate-400 hover:text-slate-600 hover:bg-slate-50 transition-all cursor-pointer active:scale-90 dark:hover:bg-slate-900 dark:hover:text-white"
               >

@@ -1,22 +1,22 @@
 "use client"
 
 import { DashboardLayout } from "@/components/dashboard-layout"
-import { getMahasiswaNotifications, markAllMahasiswaNotificationsAsRead } from "../actions"
+import { getAdminNotifications, markAllAdminNotificationsAsRead } from "../actions"
 import { useEffect, useState } from "react"
 import { motion } from "framer-motion"
-import { Bell, Check, CheckCircle2, Inbox, Calendar, AlertCircle } from "lucide-react"
+import { Bell, Check, Inbox, Calendar, AlertCircle } from "lucide-react"
 import toast from "react-hot-toast"
 
-export default function MahasiswaNotificationsPage() {
+export default function AdminNotificationsPage() {
   const [notifications, setNotifications] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
 
   const loadNotifications = async () => {
     try {
-      const res = await getMahasiswaNotifications()
+      const res = await getAdminNotifications()
       setNotifications(res)
     } catch (err) {
-      console.error("Gagal mengambil notifikasi mahasiswa:", err)
+      console.error("Gagal mengambil notifikasi admin:", err)
       toast.error("Gagal memuat notifikasi.")
     } finally {
       setLoading(false)
@@ -29,8 +29,9 @@ export default function MahasiswaNotificationsPage() {
 
   const handleMarkAllRead = async () => {
     try {
-      await markAllMahasiswaNotificationsAsRead()
+      await markAllAdminNotificationsAsRead()
       toast.success("Semua notifikasi ditandai telah dibaca.")
+      // Dispatch custom event to notify DashboardLayout to refresh the count
       window.dispatchEvent(new Event("notifications-updated"))
       loadNotifications()
     } catch (err) {
@@ -45,7 +46,7 @@ export default function MahasiswaNotificationsPage() {
         <div className="flex h-[60vh] items-center justify-center">
           <div className="flex flex-col items-center gap-2">
             <div className="size-8 rounded-full border-4 border-blue-200 border-t-blue-600 animate-spin" />
-            <p className="text-xs font-semibold text-slate-450">Memuat log notifikasi Anda...</p>
+            <p className="text-xs font-semibold text-slate-450">Memuat log notifikasi sistem...</p>
           </div>
         </div>
       </DashboardLayout>
@@ -61,11 +62,11 @@ export default function MahasiswaNotificationsPage() {
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div className="space-y-1">
             <h3 className="text-base font-bold text-slate-800 dark:text-white flex items-center gap-2">
-              <Bell className="size-5 text-blue-600 dark:text-blue-400" />
+              <Bell className="size-5 text-blue-650 dark:text-blue-400" />
               Notifikasi Saya
             </h3>
             <p className="text-xs text-slate-450">
-              Riwayat notifikasi tugas kuliah, lembar penilaian dari dosen, catatan perbaikan, serta pengumuman.
+              Riwayat log notifikasi sistem dan audit yang dikirimkan untuk administrasi SIMATU.
             </p>
           </div>
 
@@ -85,15 +86,13 @@ export default function MahasiswaNotificationsPage() {
           <div className="flex flex-col items-center justify-center py-16 bg-white border border-slate-100 rounded-xl dark:bg-slate-900/40 dark:border-slate-850">
             <Inbox className="size-10 text-slate-350 mb-3" />
             <p className="text-xs font-bold text-slate-700 dark:text-slate-200">Tidak Ada Notifikasi</p>
-            <p className="text-[10px] text-slate-400">Log riwayat notifikasi akademik Anda masih kosong.</p>
+            <p className="text-[10px] text-slate-400">Log riwayat notifikasi Anda masih kosong.</p>
           </div>
         ) : (
           <div className="space-y-3">
             {notifications.map((notif, index) => {
-              // Decide icon based on content
-              const isAlert = notif.judul.includes("DEADLINE") || notif.judul.includes("PERLU REVISI") || notif.judul.includes("⚠️")
-              const isGrade = notif.judul.includes("PENILAIAN") || notif.judul.includes("NILAI")
-              
+              const isAlert = notif.judul.includes("⚠️") || notif.judul.includes("ERROR") || notif.judul.includes("CRITICAL")
+
               return (
                 <motion.div
                   key={notif.id}
@@ -117,15 +116,11 @@ export default function MahasiswaNotificationsPage() {
                       className={`p-2 rounded-lg shrink-0 ${
                         isAlert
                           ? "bg-rose-50 text-rose-600 dark:bg-rose-950/20 dark:text-rose-450"
-                          : isGrade
-                          ? "bg-emerald-50 text-emerald-600 dark:bg-emerald-950/20 dark:text-emerald-450"
                           : "bg-blue-50 text-blue-600 dark:bg-blue-950/20 dark:text-blue-450"
                       }`}
                     >
                       {isAlert ? (
                         <AlertCircle className="size-4" />
-                      ) : isGrade ? (
-                        <CheckCircle2 className="size-4" />
                       ) : (
                         <Bell className="size-4" />
                       )}

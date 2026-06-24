@@ -1016,3 +1016,37 @@ export async function getActiveMahasiswaCount() {
     where: { status_aktif: true },
   })
 }
+
+export async function getAdminNotifications() {
+  const user = await getCurrentUser()
+  if (!user || user.role !== "admin") throw new Error("Unauthorized")
+
+  return await prisma.notifikasi.findMany({
+    where: {
+      user_id: user.identifier,
+      user_role: "admin",
+    },
+    orderBy: {
+      created_at: "desc",
+    },
+  })
+}
+
+export async function markAllAdminNotificationsAsRead() {
+  const user = await getCurrentUser()
+  if (!user || user.role !== "admin") throw new Error("Unauthorized")
+
+  await prisma.notifikasi.updateMany({
+    where: {
+      user_id: user.identifier,
+      user_role: "admin",
+      is_read: false,
+    },
+    data: {
+      is_read: true,
+    },
+  })
+
+  revalidatePath("/admin")
+  return { success: true }
+}

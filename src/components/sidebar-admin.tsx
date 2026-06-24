@@ -19,6 +19,7 @@ import {
   Bell,
   FileText,
   Home,
+  Inbox,
 } from "lucide-react"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
@@ -62,6 +63,7 @@ export function SidebarAdmin() {
     { name: "Enrollment", icon: Users, href: "/admin/enrollment" },
     { name: "Manajemen Semester", icon: FileSpreadsheet, href: "/admin/semester" },
     { name: "Pengumuman", icon: Bell, href: "/admin/pengumuman" },
+    { name: "Notifikasi Saya", icon: Inbox, href: "/admin/notifikasi" },
     { name: "Audit Log", icon: FileSpreadsheet, href: "/admin/audit-logs" },
     { name: "Laporan & Analitik", icon: FileText, href: "/admin/reporting" },
     { name: "Pengaturan", icon: Laptop, href: "/admin/settings" },
